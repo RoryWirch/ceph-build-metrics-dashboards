@@ -1,0 +1,805 @@
+{
+  "__requires": [
+    {
+      "id": "barchart",
+      "name": "Bar chart",
+      "type": "panel",
+      "version": ""
+    }, 
+    {
+      "id": "grafana",
+      "name": "Grafana",
+      "type": "grafana",
+      "version": "8.0.6"
+    }, 
+    {
+      "id": "postgres",
+      "name": "PostgreSQL",
+      "type": "datasource",
+      "version": "1.0.0"
+    }, 
+    {
+      "id": "table",
+      "name": "Table",
+      "type": "panel",
+      "version": ""
+    }, 
+    {
+      "id": "timeseries",
+      "name": "Time series",
+      "type": "panel",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations \u0026 Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 13,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "teiid (zack)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "avg build time",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "seriesToRows",
+            "reducers": []
+          }
+        }
+      ],
+      "type": "timeseries"
+    }, 
+    {
+      "datasource": "teiid (zack)",
+      "description": "Table collection of all build time data from brew.build db.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "table_view",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "version", 
+                "release", 
+                "completion_time", 
+                "creation_time", 
+                "id", 
+                "pkg_id"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }, 
+    {
+      "datasource": "teiid (zack)",
+      "description": "mean build time by release",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-yellow",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 8,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.2",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "avg build time (by release)",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "duration",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["creation_time", "completion_time"],
+              "reducer": "range"
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "release"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "duration": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "release": {
+                "aggregations": ["mean"],
+                "operation": "groupby"
+              },
+              "version": {
+                "aggregations": [],
+                "operation": null
+              }
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (zack)",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-yellow",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 9,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "avg build time (by version)",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "duration",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["creation_time", "completion_time"],
+              "reducer": "range"
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "release"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "duration": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "release": {
+                "aggregations": ["mean"],
+                "operation": null
+              },
+              "source": {
+                "aggregations": [],
+                "operation": null
+              },
+              "version": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }, 
+    {
+      "datasource": "teiid (john)",
+      "description": "Distribution of source file sizes by version.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": ["size (mb)"],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 11,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  version,size,buildtime\nFROM\n  rpminfo\nWHERE\n  name = 'ceph' and arch = 'src' and version \u003e '10.1.0';\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "src_size (version)",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "buildtime": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "size": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "version": {
+                "aggregations": ["mean"],
+                "operation": "groupby"
+              }
+            }
+          }
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "size (mb)",
+            "binary": {
+              "left": "size (mean)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (zack)",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-yellow",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 12,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.2",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "avg build time (by version)",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "duration",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["creation_time", "completion_time"],
+              "reducer": "range"
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "version"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "duration": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "release": {
+                "aggregations": ["mean"],
+                "operation": null
+              },
+              "version": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "import testing",
+  "uid": "import",
+  "version": 1
+}

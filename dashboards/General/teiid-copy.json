@@ -1,0 +1,1275 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations \u0026 Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "downstream build db for ceph",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 11,
+  "links": [],
+  "panels": [
+    {
+      "aliasColors": {
+        "duration": "green"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "teiid (zack)",
+      "description": "General build logs that contains brew.build info (all tasks submitted to brew in the past 6 months)",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "duration"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "8.0.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["brew.build.*,brew.events.time"],
+                "type": "column"
+              }, 
+              {
+                "params": ["avg"],
+                "type": "aggregate"
+              }, 
+              {
+                "params": ["brew.build.*,brew.events.time"],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "brew.build",
+          "timeColumn": "brew.events.time",
+          "where": [
+            {
+              "name": "",
+              "params": ["brew.build.pkg_id", "=", "34590"],
+              "type": "expression"
+            }, 
+            {
+              "name": "",
+              "params": ["brew.build.state ", "=", "1"],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "build_time_log",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": ["completion_time", "creation_time"]
+            }
+          }
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "duration",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["completion_time", "creation_time"],
+              "reducer": "range"
+            }
+          }
+        }
+      ],
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:283",
+          "decimals": null,
+          "format": "ms",
+          "label": "build time",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }, 
+        {
+          "$$hashKey": "object:284",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }, 
+    {
+      "datasource": "teiid (zack)",
+      "description": "Table collection of all build time data from brew.build db.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "table_view",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "version", 
+                "release", 
+                "completion_time", 
+                "creation_time", 
+                "id", 
+                "pkg_id"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }, 
+    {
+      "datasource": "teiid (john)",
+      "description": "Mean build time for each arch of all the build tasks submitted to brew).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "build time",
+            "axisPlacement": "left",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "duration (mean)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }, 
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 8,
+      "options": {
+        "barWidth": 1,
+        "groupWidth": 0.71,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "always",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.task.id, arch, parent, state, start_time, completion_time\nFROM brew.task\nWHERE\n  (brew.task.state  = 1 or brew.task.state = 2 ) and\n  brew.task.owner = 3595 and brew.task.parent is not null\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "archs_mean_buildtime",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "duration",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["start_time", "completion_time"],
+              "reducer": "range"
+            }
+          }
+        }, 
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Range": {
+                "aggregations": ["lastNotNull"],
+                "operation": null
+              },
+              "arch": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "duration": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "parent": {
+                "aggregations": [],
+                "operation": null
+              }
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (zack)",
+      "description": "Distribution of build time by version.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "buildtime (hr)",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": ["buildtime (hr)"],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }, 
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "buildtime (hr)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }, 
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "duration (mean)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.2",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  brew.build.*,brew.events.time\n  AS creation_time\nFROM brew.build\nINNER JOIN brew.events ON brew.build.create_event=brew.events.id\nWHERE\n  brew.build.pkg_id = 34590 AND\n  brew.build.state  = 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "build_time_mean (by version)",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "duration",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["creation_time", "completion_time"],
+              "reducer": "range"
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "version"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "duration": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "version": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }, 
+        {
+          "id": "filterFieldsByName",
+          "options": {}
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "buildtime (hr)",
+            "binary": {
+              "left": "duration (mean)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "3600000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (john)",
+      "description": "File size by arc for version 16.2.0. Used to visualize the file sizes being submitted to each arc.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "filesize (MB)",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": ["filesize (MB)"],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 16,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  name,arch,rpminfo.size\nFROM\n  rpminfo\nWHERE\n  version = '16.2.0';",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "file_size_arch (16.2.0)",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "arch": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "size": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "size (mean)"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "filesize (MB)",
+            "binary": {
+              "left": "size (mean)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (john)",
+      "description": "Distribution of source file sizes by version.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "filesize (MB)",
+            "axisPlacement": "left",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": ["size (mb)"],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  version,size,buildtime\nFROM\n  rpminfo\nWHERE\n  name = 'ceph' and arch = 'src' and version \u003e '10.1.0';\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "src_size (version)",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "size": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              },
+              "version": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "size (mb)",
+            "binary": {
+              "left": "size (mean)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (john)",
+      "description": "Distribution of file sizes (avg) that belongs to all builds from version 16.2.4.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "filesize (MB)",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": ["size (mb)"],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 24,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  name,rpminfo.size\nFROM\n  rpminfo\nWHERE\n  version = '16.2.4';",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "file_size (16.2.4)",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "name": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "size": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "size (mean)"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "size (mb)",
+            "binary": {
+              "left": "size (mean)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "include": ["size (mean)"],
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }, 
+    {
+      "datasource": "teiid (john)",
+      "description": "Distribution of file sizes (avg) that belongs to all builds from version 16.2.0.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "filesize (MB)",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }, 
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": ["size (mb)"],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }, 
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "size (gb)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 14,
+      "options": {
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "text": {},
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  name,rpminfo.size\nFROM\n  rpminfo\nWHERE\n  version = '16.2.0';\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "file_size (16.2.0)",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "name": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "size": {
+                "aggregations": ["mean"],
+                "operation": "aggregate"
+              }
+            }
+          }
+        }, 
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "size (mean)"
+              }
+            ]
+          }
+        }, 
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "size (mb)",
+            "binary": {
+              "left": "size (mean)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "1000000"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6M",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "teiid Copy",
+  "uid": "g2JjD_W7k",
+  "version": 2
+}
